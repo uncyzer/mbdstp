@@ -1,7 +1,9 @@
 package fr.rocamora.barrali.customer.Controllers;
 
+import fr.rocamora.barrali.customer.Dtos.CustomerDTO;
 import fr.rocamora.barrali.customer.Entities.Customer;
 import fr.rocamora.barrali.customer.Repositories.CustomerRepository;
+import fr.rocamora.barrali.customer.Services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,19 +14,19 @@ import java.util.List;
 
 @RestController
 public class CustomerController {
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping("/customers")
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> getCustomers() {
+        return customerService.findAll();
     }
 
     @GetMapping("/customers/{id}")
-    public Customer getCustomer(@PathVariable Long id) {
-        return customerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public CustomerDTO getCustomer(@PathVariable Long id) {
+        return customerService.findById(id);
     }
 }
