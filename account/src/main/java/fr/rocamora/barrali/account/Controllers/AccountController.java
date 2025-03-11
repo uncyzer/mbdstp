@@ -1,5 +1,6 @@
 package fr.rocamora.barrali.account.Controllers;
 
+import fr.rocamora.barrali.account.Client.CustomerClient;
 import fr.rocamora.barrali.account.Entities.Account;
 import fr.rocamora.barrali.account.Repositories.AccountRepository;
 import org.springframework.http.HttpStatus;
@@ -13,19 +14,29 @@ import java.util.List;
 @RestController
 public class AccountController {
     private final AccountRepository accountRepository;
+    private final CustomerClient customerClient;
 
-    public AccountController(AccountRepository accountRepository) {
+    public AccountController(AccountRepository accountRepository, CustomerClient customerClient) {
         this.accountRepository = accountRepository;
+        this.customerClient = customerClient;
     }
 
     @GetMapping("/accounts")
     public List<Account> getAccounts() {
-        return accountRepository.findAll();
+        List<Account> accountList = accountRepository.findAll();
+        accountList.forEach(
+                account -> {
+                    account.setCustomer(customerClient.getCustomer(account.getCustomerId()));
+                }
+        );
+        return accountList;
     }
 
     @GetMapping("/accounts/{id}")
     public Account getAccount(@PathVariable String id) {
-        return accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Account accountInstance = accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+        accountInstance.setCustomer(customerClient.getCustomer(accountInstance.getCustomerId()));
+        return accountInstance;
     }
 
 }
