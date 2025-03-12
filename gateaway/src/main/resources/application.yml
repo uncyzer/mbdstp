@@ -3,14 +3,8 @@ spring:
     name: gateway
   cloud:
     gateway:
-      routes:
-        - id: customers
-          uri: http://localhost:8080
-          predicates:
-            - Path=/customers/**, /customer/**
-        - id: accounts
-          uri: http://localhost:8081
-          predicates:
-            - Path=/accounts/**, /account/**
+      discovery:
+        locator:
+          enabled: true
 server:
   port: 8888
