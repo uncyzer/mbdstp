@@ -8,3 +8,8 @@ spring:
       enabled: true
 server:
   port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
