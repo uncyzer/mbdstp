@@ -1,0 +1,14 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+
+server:
+  port: 8761
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
