@@ -3,6 +3,7 @@ package fr.rocamora.barrali.account;
 import fr.rocamora.barrali.account.Client.CustomerClient;
 import fr.rocamora.barrali.account.Entities.Account;
 import fr.rocamora.barrali.account.Repositories.AccountRepository;
+import fr.rocamora.barrali.account.Services.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +29,7 @@ public class AccountApplication {
                 Account accountInstance = Account.builder()
                         .customerId(customer.getId())
                         .id(UUID.randomUUID().toString())
-                        .balance(Math.random() * 1000)
+                        .balance(Math.random()*1000)
                         .dateCreated(LocalDate.now())
                         .currencyType(CurrencyType.EUR)
                         .build();
