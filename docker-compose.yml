@@ -1,0 +1,83 @@
+# Docker Compose specification
+
+services:
+  config-server:
+    build:
+      context: ./config
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./config-repo:/config-repo
+    networks:
+      - mbds-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9999/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  discovery-server:
+    build:
+      context: ./discovery
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:9999
+      - HOSTNAME=discovery-server
+    networks:
+      - mbds-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  customer-service:
+    build:
+      context: ./customer
+    ports:
+      - "8080:8080"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:9999
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+    networks:
+      - mbds-network
+
+  account-service:
+    build:
+      context: ./account
+    ports:
+      - "8081:8081"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:9999
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+    networks:
+      - mbds-network
+
+  gateway-service:
+    build:
+      context: ./gateaway
+    ports:
+      - "8888:8888"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:9999
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+    networks:
+      - mbds-network
+
+networks:
+  mbds-network:
+    driver: bridge

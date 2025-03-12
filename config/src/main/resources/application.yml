@@ -5,7 +5,7 @@ spring:
     config:
       server:
         native:
-          search-locations: "file:/home/uncyzer/IdeaProjects/mbds-tp-note/config-repo"
+          search-locations: "file:/config-repo"
   profiles:
     active: native
 server:

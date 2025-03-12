@@ -2,4 +2,17 @@ spring:
   application:
     name: discovery
   config:
-    import: optional:configserver:http://localhost:9999
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:9999}
+    
+eureka:
+  instance:
+    hostname: ${HOSTNAME:localhost}
+    prefer-ip-address: true
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    
+server:
+  port: 8761

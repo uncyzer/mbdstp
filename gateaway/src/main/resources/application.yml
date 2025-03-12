@@ -2,4 +2,4 @@ spring:
   application:
     name: gateway
   config:
-    import: optional:configserver:http://localhost:9999
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:9999}
