@@ -4,6 +4,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/account" />
     <file type="web" url="file://$PROJECT_DIR$/customer" />
+    <file type="web" url="file://$PROJECT_DIR$/discovery" />
     <file type="web" url="file://$PROJECT_DIR$/gateaway" />
   </component>
   <component name="ProjectRootManager">
