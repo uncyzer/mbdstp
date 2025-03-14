@@ -139,6 +139,13 @@
 3. Test each container individually
 
 ## 10. Create Docker Compose
+Order : 
+   - Config service first
+   - Discovery service second
+   - Domain services
+   - Gateway service last
+
+
 
 Create docker-compose.yml:
 ```yaml
